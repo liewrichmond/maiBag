@@ -1,5 +1,5 @@
 import * as path from "path";
-import { throws } from "assert";
+import { throws, match } from "assert";
 const Datastore = require("nedb");
 
 
@@ -11,15 +11,51 @@ export interface IContact {
 
 export class Worker {
     private db: Nedb;
-    constructor() {
-        this.db = new Datastore({
-            filename: path.join(__dirname, "contacts.db"),
-            autoload: true
-        });
+    /**
+     * Creates a new worker to do Contacts related work.
+     * @param dbName A database name that ends with .db. Example: test.db
+     */
+    constructor(dbName?: string) {
+        if (dbName) {
+            this.db = new Datastore({
+                filename: path.join(__dirname, dbName),
+                autoload: true
+            });
+        } else {
+            this.db = new Datastore({
+                filename: path.join(__dirname, "contacts.db"),
+                autoload: true
+            });
+        }
     }
 
     private isContact(inObject: IContact | any): inObject is IContact {
         return (inObject as IContact).email !== undefined && (inObject as IContact).name !== undefined;
+    }
+
+    private async getContact(inContact: IContact): Promise<IContact[]> {
+        const matchingContacts = new Promise<IContact[]>((inResolve, inReject) => {
+            this.db.find(inContact, (inError: Error, inDocuments: IContact[]) => {
+                if (inError) {
+                    inReject(inError);
+                }
+                else {
+                    inResolve(inDocuments);
+                }
+            })
+        });
+        return matchingContacts;
+    }
+
+    private async contactExists(inContact: IContact): Promise<boolean> {
+        const matchingContacts: IContact[] = await this.getContact(inContact);
+        if (matchingContacts.length == 0) {
+            return false;
+        } else if (matchingContacts[0].email === inContact.email && matchingContacts[0].name === inContact.name) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public listContacts(): Promise<IContact[]> {
@@ -36,11 +72,15 @@ export class Worker {
         });
     }
 
-    public addContact(inContact: IContact): Promise<IContact> {
-
+    public async addContact(inContact: IContact): Promise<IContact> {
+        const contactExists = await this.contactExists(inContact);
         return new Promise((inResolve, inReject) => {
             if (!this.isContact(inContact)) {
-                inReject(new Error);
+                inReject(new TypeError);
+            } else if (contactExists) {
+                this.getContact(inContact).then((contact: IContact[]) => {
+                    inResolve(contact[0]);
+                })
             }
             else {
                 this.db.insert(
@@ -65,7 +105,6 @@ export class Worker {
         console.log("Contacts.Worker.deleteContact()", inID);
 
         return new Promise((inResolve, inReject) => {
-
             this.db.remove(
                 { _id: inID },
                 {},

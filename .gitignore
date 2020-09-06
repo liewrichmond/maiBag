@@ -2,3 +2,4 @@
 */.vscode/
 */dist/
 *.db
+!/server/src/test.db
