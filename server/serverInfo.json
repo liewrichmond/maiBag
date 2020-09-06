@@ -1,0 +1,18 @@
+{
+    "smtp": {
+        "host": "smtp.gmail.com",
+        "port": 465,
+        "auth": {
+            "user": "richmond.liew.97@gmail.com",
+            "pass": "Wo0fw0of9597!"
+        }
+    },
+    "imap": {
+        "host": "imap.gmail.com",
+        "port": 993,
+        "auth": {
+            "user": "richmond.liew.97@gmail.com",
+            "pass": "Wo0fw0of9597!"
+        }
+    }
+}
