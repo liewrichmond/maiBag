@@ -1,12 +1,17 @@
 // const Contacts = require('../src/Contacts')
 import * as Contacts from "../src/Contacts";
+import { assert } from "console";
 
 test("tests true is true", () => {
     expect(true === true);
 })
-
-test("get Contacts", async () => {
-    let worker:Contacts.Worker = new Contacts.Worker();
-    let contacts: Contacts.IContact[] = await worker.listContacts();
-    expect (contacts == []);
+ 
+test("adds a contact", async () => {
+    let worker:Contacts.Worker = new Contacts.Worker("test.db");
+    let contact: Contacts.IContact = await worker.addContact({
+        name:"Janet Jackson",
+        email:"LessPopularJackson@heavenMail.com"
+    });
+    expect(contact.name).toBe("Janet Jackson");
+    expect(contact.email).toBe("LessPopularJackson@heavenMail.com");
 })
