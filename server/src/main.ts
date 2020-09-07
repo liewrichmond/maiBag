@@ -49,7 +49,7 @@ app.get("/mailboxes/:mailbox",
     });
 
 //Get a message
-app.get("/mailboxes/:mailbox/:id",
+app.get("/messages/:mailbox/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
             const imapWorker: IMAP.Worker = new IMAP.Worker(serverInfo);
@@ -64,7 +64,7 @@ app.get("/mailboxes/:mailbox/:id",
     });
 
 //Delete message
-app.delete("/mailboxes/:mailbox/:id",
+app.delete("/messages/:mailbox/:id",
     async (inReqest: Request, inResponse: Response) => {
         try {
             const imapWorker: IMAP.Worker = new IMAP.Worker(serverInfo);
