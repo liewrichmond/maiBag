@@ -2,4 +2,5 @@
 */.vscode/
 */dist/
 *.db
+*serverInfo.json
 !/server/src/test.db
