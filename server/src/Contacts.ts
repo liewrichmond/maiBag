@@ -33,7 +33,7 @@ export class Worker {
         return (inObject as IContact).email !== undefined && (inObject as IContact).name !== undefined;
     }
 
-    private async getContact(inContact: IContact): Promise<IContact[]> {
+    private getContact(inContact: IContact): Promise<IContact[]> {
         const matchingContacts = new Promise<IContact[]>((inResolve, inReject) => {
             this.db.find(inContact, (inError: Error, inDocuments: IContact[]) => {
                 if (inError) {
