@@ -1,6 +1,5 @@
 // const Contacts = require('../src/Contacts')
 import * as Contacts from "../src/Contacts";
-import { assert } from "console";
 
 test("tests true is true", () => {
     expect(true === true);
