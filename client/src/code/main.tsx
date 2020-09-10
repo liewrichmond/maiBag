@@ -15,7 +15,7 @@ const baseComponent = ReactDOM.render(<BaseLayout/>, document.body)
 baseComponent.state.showHidePleaseWait(true);
 
 async function getMailboxes() {
-    const imapWorker: IMAP.worker = new IMAP.Worker();
+    const imapWorker: IMAP.Worker = new IMAP.Worker();
     const mailboxes : IMAP.IMailbox[] = await imapWorker.listMailboxes();
     mailboxes.forEach((inMailbox) => {
         baseComponent.state.addMailboxToList(inMailbox);

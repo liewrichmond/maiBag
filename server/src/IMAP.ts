@@ -74,8 +74,15 @@ export class Worker {
             await client.close();
             return [];
         }
+        const latestMessage: any[] = await client.listMessages(
+            inCallOptions.mailbox, "*:*", ["uid", "envelope"]
+        );
+
+        const latestId:number = latestMessage[0]["#"];
+        const startId: number = latestId - 30 > 0 ? latestId - 30 : 1;
+        
         const messages: any[] = await client.listMessages(
-            inCallOptions.mailbox, "1:*", ["uid", "envelope"]
+            inCallOptions.mailbox, `${startId}:*`, ["uid", "envelope"]
         );
         await client.close();
         const finalMessages: IMessage[] = [];
@@ -87,7 +94,7 @@ export class Worker {
                 subject: inValue.envelope.subject
             });
         });
-        return finalMessages;
+        return finalMessages.reverse();
     }
 
     public async getMessageBody(inCallOptions: ICallOptions): Promise<string> {

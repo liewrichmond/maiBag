@@ -34,8 +34,9 @@ app.get("/mailboxes",
     });
 
 //list messages in a mailbox
-app.get("/mailboxes/:mailbox",
+app.get("/mailboxes/:mailbox(*)",
     async (inRequest: Request, inResponse: Response) => {
+        console.log(inRequest.params.mailbox)
         try {
             console.log("retreiving messages")
             const imapWorker: IMAP.Worker = new IMAP.Worker(serverInfo);
@@ -49,7 +50,7 @@ app.get("/mailboxes/:mailbox",
     });
 
 //Get a message
-app.get("/messages/:mailbox/:id",
+app.get("/messages/:mailbox(*)/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
             const imapWorker: IMAP.Worker = new IMAP.Worker(serverInfo);
@@ -64,7 +65,7 @@ app.get("/messages/:mailbox/:id",
     });
 
 //Delete message
-app.delete("/messages/:mailbox/:id",
+app.delete("/messages/:mailbox(*)/:id",
     async (inReqest: Request, inResponse: Response) => {
         try {
             const imapWorker: IMAP.Worker = new IMAP.Worker(serverInfo);
