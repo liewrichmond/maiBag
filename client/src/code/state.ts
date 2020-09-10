@@ -1,6 +1,8 @@
 import * as IMAP from "./IMAP";
 import * as Contacts from "./Contacts";
+import * as SMTP from "./SMTP";
 import { config } from "./config"
+
 
 export function createState(inParentComponent) {
     return {
@@ -198,6 +200,51 @@ export function createState(inParentComponent) {
             });
             console.log(cl)
             this.setState({contacts:cl, contactName: "", contactId: null, contactEmail: ""});
+        }.bind(inParentComponent),
+
+        /**
+         * Displays a selected message in the messageView area
+         */
+        showMessage: async function(inMessage: IMAP.IMessage): Promise<void> {
+            this.state.showHidePleaseWait(true);
+            const imapWorker: IMAP.Worker = new IMAP.Worker();
+            const messageBody: string = await imapWorker.getMessageBody(inMessage.id, this.state.currentMailbox);
+            this.state.showHidePleaseWait(false);
+            this.setState({
+                currentView: "message",
+                messageID: inMessage.id,
+                messageDate: inMessage.date,
+                messageFrom: inMessage.from,
+                messageTo: "",
+                messageSubject: inMessage.subject,
+                messageBody: messageBody
+            })
+        }.bind(inParentComponent),
+
+
+        /**
+         * Triggers a message being sent
+         */
+        sendMessage: async function() : Promise<void> {
+            this.state.showHidePleaseWait(true);
+            const smtpWorker: SMTP.Worker = new SMTP.Worker();
+            await smtpWorker.sendMessage(this.state.messageTo, this.state.messageFrom, this.sate.messageSubject, this.state.messageBody)
+            this.state.showHidePleaseWait(false);
+            this.setState({currentView: "welcome"}); 
+        }.bind(inParentComponent),
+
+        /**
+         * Triggers a message being deleted
+         */
+        deleteMessage: async function() : Promise<void> {
+            this.state.showHidePleaseWait(true);
+            const imapWorker: IMAP.Worker = new IMAP.Worker();
+            await imapWorker.deleteMessage(this.state.messageID, this.state.currentMailbox);
+            this.state.showHidePleaseWait(false);
+            const cl = this.state.messages.filter((message) => {
+                return message.id != this.state.messageID
+            })
+            this.setState({messages:cl, currentView:"welcome"});
         }.bind(inParentComponent)
 
     }
