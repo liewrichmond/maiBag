@@ -161,6 +161,44 @@ export function createState(inParentComponent) {
         showContact: function (in_id: string, inName: string, inEmail: string): void {
             this.setState({ currentView: "contact", contactID: in_id, contactName: inName, contactEmail: inEmail });
         }.bind(inParentComponent),
-        
+
+
+        /**
+         * A function to be called when a user types in an editable field.
+         */
+        fieldChangeHandler: function(inEvent: any): void {
+            if(inEvent.target.id === "contactName" && inEvent.target.value.length > 16) {return ;}
+            this.setState({[inEvent.target.id] : inEvent.target.value});
+        }.bind(inParentComponent),  
+
+        /**
+         * Saves a contact 
+         */
+        saveContact: async function(): Promise<void> {
+            const cl = this.state.contacts.slice(0);
+            this.state.showHidePleaseWait(true);
+            const contactWorker: Contacts.Worker = new Contacts.Worker();
+            const newContact: Contacts.IContact = {name: this.state.contactName, email: this.state.contactEmail};
+            const returnedContact: Contacts.IContact = await contactWorker.addContact(newContact);
+            this.state.showHidePleaseWait(false);
+            cl.push(returnedContact);
+            this.setState({contacts:cl, contactName: "", contactID: null, contactEmail: ""});
+        }.bind(inParentComponent),
+
+        /**
+         * Deletes a contact from the contact list
+         */
+        deleteContact: async function():Promise<void> {
+            this.state.showHidePleaseWait(true);
+            const contactsWorker: Contacts.Worker = new Contacts.Worker();
+            await contactsWorker.deleteContact(this.state.contactID);
+            this.state.showHidePleaseWait(false);
+            const cl = this.state.contacts.filter((value) => {
+                return value._id != this.state.contactID;
+            });
+            console.log(cl)
+            this.setState({contacts:cl, contactName: "", contactId: null, contactEmail: ""});
+        }.bind(inParentComponent)
+
     }
 }
