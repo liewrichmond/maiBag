@@ -62,9 +62,9 @@ export function createState(inParentComponent) {
                     break;
             }
         }.bind(inParentComponent), /* End showComposeMessage(). */
-        
+
         /**
-         * 
+         * Switches the center view area to add a contact with empty fields
          */
         showAddContact: function (): void {
             console.log("state.showAddContact()");
@@ -72,14 +72,16 @@ export function createState(inParentComponent) {
         }.bind(inParentComponent), /* End showAddContact(). */
 
         /**
-         * 
+         * Toggles the "Please Wait" message to be shown which blocks interaction with the UI.
+         * @param inVisible a boolean. True if the please wait message should be shown, false otherwise
          */
         showHidePleaseWait: function (inVisible: boolean): void {
             this.setState({ pleaseWaitVisible: inVisible });
         }.bind(inParentComponent),
 
         /**
-         * 
+         * Adds a specified mailbox to the list of mailboxes to be displayed on screen
+         * @param inMailbox the IMailbox to be added to the list
          */
         addMailboxToList: function (inMailbox: IMAP.IMailbox): void {
             const cl: IMAP.IMailbox[] = this.state.mailboxes.slice(0);
@@ -88,7 +90,8 @@ export function createState(inParentComponent) {
         }.bind(inParentComponent),
 
         /**
-         * 
+         * Adds a specified IContact to the list of contacts to be displayed on screen
+         * @param inContact the IContact to be added to the list
          */
         addContactToList: function (inContact: Contacts.IContact): void {
             const cl: Contacts.IContact[] = this.state.contacts.slice(0);
@@ -97,7 +100,8 @@ export function createState(inParentComponent) {
         }.bind(inParentComponent),
 
         /**
-         * 
+         * Sets the currently displayed mailbox to the given mailbox path
+         * @param inPath the IMailbox path to be displayed
          */
         setCurrentMailbox: function (inPath: string): void {
             this.setState({ currentView: "welcome", currentMailbox: inPath });
@@ -105,7 +109,8 @@ export function createState(inParentComponent) {
         }.bind(inParentComponent),
 
         /**
-         * 
+         * Helper functions that gets the messages of the given path
+         * @param inPath the IMailbox path whose messages you want to get
          */
         getMessages: async function (inPath: string): Promise<void> {
 
@@ -123,7 +128,8 @@ export function createState(inParentComponent) {
         }.bind(inParentComponent), /* End getMessages(). */
 
         /**
-         * 
+         * Helper funciton that adds a specified IMessage to the list of messages of the state.
+         * @param inMessage the IMessage to add to the list of messages.
          */
         addMessageToList: function (inMessage: IMAP.IMessage): void {
 
@@ -152,6 +158,9 @@ export function createState(inParentComponent) {
 
         }.bind(inParentComponent), /* End clearMessages(). */
 
-
+        showContact: function (in_id: string, inName: string, inEmail: string): void {
+            this.setState({ currentView: "contact", contactID: in_id, contactName: inName, contactEmail: inEmail });
+        }.bind(inParentComponent),
+        
     }
 }

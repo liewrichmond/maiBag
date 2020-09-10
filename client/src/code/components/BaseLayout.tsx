@@ -11,7 +11,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Toolbar from "./Toolbar";
 import MailboxList from "./MailboxList";
 import MessageList from "./MessageList";
-// import ContactList from "./ContactList";
+import ContactList from "./ContactList";
 // import WelcomeView from "./WelcomeView";
 // import ContactView from "./ContactView";
 // import MessageView from "./MessageView";
@@ -64,7 +64,7 @@ class BaseLayout extends Component {
           </div> */}
         </div>
 
-        {/* <div className="contactList"><ContactList state={this.state} /></div> */}
+        <div className="contactList"><ContactList state={this.state} /></div>
 
       </div>
     );
