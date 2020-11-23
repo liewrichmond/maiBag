@@ -3,4 +3,6 @@ A email client built using Typescript. The code written here follows Frank Zamme
 - Not retreiving the entire mail list (takes too long)
 - Lists items in reverse chronological order (Latest mail first)
 
+This was done mostly as a way to get my feet wet with Typescript and fullstack web dev. I feel like I achieved this as I leveraged what I learned here to make more projects. Thanks Mr.Frank Zammetti.
+
 Tbh, not a fan of the global state management with the state.tsx file. I feel that my 2 later projects, returnMe and and Chip420 made it easier to keep track of state of each component.
